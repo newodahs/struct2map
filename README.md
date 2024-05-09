@@ -5,7 +5,13 @@ Primary usecases:
  2. Strucutres that you wish to pull data out of without having to write code paths for each value (just use the namespace-like keys to get your data)
 
 ## Notes and Supported types ##
-Function call: `StructToMap([struct])`; returns the structure converted to a `map[string]any` or nil on error (ex: empty struct passed; not a struct passed)
+Function call: 
+```
+// Takes a structure (obj) and returns a map[string]any where the string keys are the fields of the structure and the values are the field values
+//
+// returns nil on error (ex: empty struct passed; not a struct passed)
+func StructToMap(obj any) map[string]any 
+```
 
 Most of the basic types at this point are supported, including nested/embedded structures, maps, slices, etc...
 
