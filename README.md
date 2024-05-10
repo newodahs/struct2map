@@ -44,7 +44,7 @@ testStruct := someStruct{
     }
 }
 
-outputMap := ConvertStruct("", testStruct)
+outputMap := ConvertStruct(testStruct)
 ```
 The key for an item on the `SomeMap` map in the `InnerStruct` would appear in the output map as the following key: `InnerStruct.SomeMap.test => 1`.
 
