@@ -8,9 +8,19 @@ import (
 	"github.com/newodahs/struct2map/internal"
 )
 
-// Takes a structure (obj) and returns a map[string]any where the string keys are the fields of the structure and the values are the field values
+// Takes a structure (obj) and turns it into a single, flat map
 //
-// returns nil on error (ex: empty struct passed; not a struct passed)
+// The structure field names come the map keys while the field values become the values for the map.
+// The map key names may be altered by using the struct2map tag on the structure field
+//
+// Nesting of other structures, slices, or maps within top level (passed) structure result in keys
+// that represent in a parent-child namespace like format of [parentField].[childField];
+// see README documentation for further notes on this
+//
+// Additional structure tag options include omitempty to omit nil-able fields from the map
+// and ignoreparents to ignore the prior parent namespace prefixes at that point
+//
+// Returns: map[string]any that is representative of the passed structure or nil on error (ex: empty struct passed; not a struct passed)
 func StructToMap(obj any) map[string]any {
 	return structToMap("", obj)
 }
