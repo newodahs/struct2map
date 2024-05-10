@@ -21,7 +21,7 @@ import (
 // and ignoreparents to ignore the prior parent namespace prefixes at that point
 //
 // Returns: map[string]any that is representative of the passed structure or nil on error (ex: empty struct passed; not a struct passed)
-func StructToMap(obj any) map[string]any {
+func ConvertStruct(obj any) map[string]any {
 	return structToMap("", obj)
 }
 
@@ -104,6 +104,13 @@ func fieldToMap(dest map[string]any, mapKeyName string, workingField reflect.Val
 		break
 	}
 
+	if !workingField.IsValid() {
+		if !omitEmpty {
+			dest[mapKeyName] = nil
+		}
+		return
+	}
+
 	switch workingField.Kind() {
 	case reflect.Struct:
 		// start the process on a new struct
@@ -111,13 +118,6 @@ func fieldToMap(dest map[string]any, mapKeyName string, workingField reflect.Val
 			dest[k] = v
 		}
 	case reflect.Map:
-		if !workingField.IsValid() {
-			if !omitEmpty {
-				dest[mapKeyName] = nil
-			}
-			return
-		}
-
 		if omitEmpty && workingField.IsNil() {
 			return
 		}
@@ -138,13 +138,6 @@ func fieldToMap(dest map[string]any, mapKeyName string, workingField reflect.Val
 			}
 		}
 	case reflect.Slice:
-		if !workingField.IsValid() {
-			if !omitEmpty {
-				dest[mapKeyName] = nil
-			}
-			return
-		}
-
 		if omitEmpty && workingField.IsNil() {
 			return
 		}
@@ -165,13 +158,6 @@ func fieldToMap(dest map[string]any, mapKeyName string, workingField reflect.Val
 			}
 		}
 	default:
-		if !workingField.IsValid() {
-			if !omitEmpty {
-				dest[mapKeyName] = nil
-			}
-			return
-		}
-
 		if omitEmpty && workingField.Kind() == reflect.Interface && workingField.IsNil() {
 			return
 		}

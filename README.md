@@ -6,7 +6,7 @@ Primary usecases:
 
 ## Usage and Notes ##
 ```
-func StructToMap(obj any) map[string]any
+func ConvertStruct(obj any) map[string]any
 ```
 Takes a structure `obj` and returns a `map[string]any` where the map keys are the field names in the structure and the values are the field values or nil on error (ex: empty struct passed; not a struct passed).
 
@@ -44,7 +44,7 @@ testStruct := someStruct{
     }
 }
 
-outputMap := StructToMap("", testStruct)
+outputMap := ConvertStruct("", testStruct)
 ```
 The key for an item on the `SomeMap` map in the `InnerStruct` would appear in the output map as the following key: `InnerStruct.SomeMap.test => 1`.
 

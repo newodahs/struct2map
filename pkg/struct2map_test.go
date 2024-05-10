@@ -343,7 +343,7 @@ func Test_RegularCases(t *testing.T) {
 				t.Skipf("skipped '%s' due to SkipTest being set", curTest.Name)
 			}
 
-			genMap := StructToMap(curTest.TestStructure)
+			genMap := ConvertStruct(curTest.TestStructure)
 
 			//compare generated to expected
 			for k, v := range genMap {
