@@ -6,9 +6,20 @@ Primary usecases:
 
 ## Usage and Notes ##
 ```
-func ConvertStruct(obj any) map[string]any
+func ConvertStruct(obj any, opts ...StructConvertOpts) map[string]any
 ```
 Takes a structure `obj` and returns a `map[string]any` where the map keys are the field names in the structure and the values are the field values or nil on error (ex: empty struct passed; not a struct passed).
+
+The `opts` argument is a list of optional modifying options you may pass; currently the only supported modifiers are as follows:
+```
+	STRUCT_CONVERT_NOOP               // does nothing
+	STRUCT_CONVERT_MAPKEY_TOLOWER     // ignores the struct2map tag name (if set) and converts the STRUCT fieldname to lowercase for the map output
+	STRUCT_CONVERT_MAPKEY_TOUPPER     // ignores the struct2map tag name (if set) and converts the STRUCT fieldname to UPPERCASE for the map output
+	STRUCT_CONVERT_MAPKEY_CAMELCASE   // ignores the struct2map tag name (if set) and converts the STRUCT fieldname to CamelCase for the map output
+	STRUCT_CONVERT_MAPKEY_LOWERCAMEL  // ignores the struct2map tag name (if set) and converts the STRUCT fieldname to lowerCamelCase for the map output
+	STRUCT_CONVERT_MAPKEY_SNAKE       // ignores the struct2map tag name (if set) and converts the STRUCT fieldname to snake_case for the map output
+```
+These modifiers are meant for a case where you cannot decorate a structure with the `struct2map` tag (see below), for example if the struct is from a third-party library you cannot or do not wish to modify.  All of the `STRUCT_CONVERT_MAPKEY_*` modifier options are BEST EFFORT only AND are MUTUALLY EXCLUSIVE to one another; last one passed should win, but please don't pass more than one...
 
 Most of the basic types at this point are supported, including nested/embedded structures, maps, slices, etc...
 
