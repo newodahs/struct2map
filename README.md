@@ -4,7 +4,7 @@ Primary usecases:
  1. Structures that you may wish to itterate over in an key-value type fashion
  2. Strucutres that you wish to pull data out of without having to write code paths for each value (just use the namespace-like keys to get your data)
 
-## Usage and Notes ##
+## Usage ##
 ```
 func ConvertStruct(obj any, opts ...StructConvertOpts) map[string]any
 ```
@@ -21,7 +21,9 @@ The `opts` argument is a list of optional modifying options you may pass; curren
 ```
 These modifiers are meant for a case where you cannot decorate a structure with the `struct2map` tag (see below), for example if the struct is from a third-party library you cannot or do not wish to modify.  All of the `STRUCT_CONVERT_MAPKEY_*` modifier options are BEST EFFORT only AND are MUTUALLY EXCLUSIVE to one another; last one passed should win, but please don't pass more than one...
 
-Most of the basic types at this point are supported, including nested/embedded structures, maps, slices, etc...
+## Notes ##
+
+Most of the basic types at this point are supported for the map values, including nested/embedded structures, maps, slices, etc...
 
 Pointers are always dereferenced when storing the values (avoid storing the pointer address).
 
@@ -33,6 +35,7 @@ In the case of slices, maps, or other embedded/nested structures, the output map
  * **Structures**: The embedded/nested structure name will prepend the inner fields as `[parentFieldName].[childFieldName] => value`.
  * **Maps**: Data pulled from maps will appears as `[mapFieldName].[mapKeyToString] => [value]`.
    * If the map key is unable to be directly converted to a string, the key will come back as the type name as seen via reflection.
+   * In the event the map key is a `float` (of any type) or `complex64`/`complex128`, the conversion function to string uses the '`g`' modifier with a precision of -1 (see notes on https://pkg.go.dev/strconv#FormatFloat and https://pkg.go.dev/strconv#FormatComplex).
  * **Slices**: Data pulled form slices will appear as `[sliceFieldName].[sliceIndex] => [value]`.
 
 As the amount of nesting increases, so does the namespacing; in example:
