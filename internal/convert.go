@@ -26,13 +26,13 @@ func ConvertAnyToString(val any) string {
 	case reflect.String:
 		return valOf.String()
 	case reflect.Complex64:
-		return strconv.FormatComplex(valOf.Complex(), 'g', 3, 64)
+		return strconv.FormatComplex(valOf.Complex(), 'g', -1, 64)
 	case reflect.Complex128:
-		return strconv.FormatComplex(valOf.Complex(), 'g', 3, 128)
+		return strconv.FormatComplex(valOf.Complex(), 'g', -1, 128)
 	case reflect.Float32:
-		return strconv.FormatFloat(valOf.Float(), 'g', 3, 32)
+		return strconv.FormatFloat(valOf.Float(), 'g', -1, 32)
 	case reflect.Float64:
-		return strconv.FormatFloat(valOf.Float(), 'g', 3, 64)
+		return strconv.FormatFloat(valOf.Float(), 'g', -1, 64)
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
 		return strconv.FormatInt(valOf.Int(), 10)
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
