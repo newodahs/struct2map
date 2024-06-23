@@ -38,7 +38,7 @@ In the case of slices, maps, or other embedded/nested structures, the output map
    * In the event the map key is a `float` (of any type) or `complex64`/`complex128`, the conversion function to string uses the '`g`' modifier with a precision of -1 (see notes on https://pkg.go.dev/strconv#FormatFloat and https://pkg.go.dev/strconv#FormatComplex).
  * **Slices**: Data pulled form slices will appear as `[sliceFieldName].[sliceIndex] => [value]`.
 
-As the amount of nesting increases, so does the namespacing; in example:
+As the amount of nesting increases, so does the namespacing; for example:
 ```
 type someStruct struct {
     TopLevel bool
