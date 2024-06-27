@@ -132,6 +132,8 @@ STRUCT_MEMBER_PROC:
 	return ret
 }
 
+const DEFAULT_SUBKEY_STRING = "emptyKey"
+
 func fieldToMap(dest map[string]any, parentKeyName, mapKeyName string, workingField reflect.Value, omitEmpty bool, nameModFunc func(string) string) {
 	for {
 		if workingField.Kind() == reflect.Pointer {
@@ -185,7 +187,21 @@ func fieldToMap(dest map[string]any, parentKeyName, mapKeyName string, workingFi
 					dest[k] = v
 				}
 			} else {
-				dest[fmt.Sprintf("%s.%s", keyName, internal.ConvertAnyToString(mapItr.Key().Interface()))] = mapVal.Interface()
+				needBrkt := false
+				subKey := internal.ConvertAnyToString(mapItr.Key().Interface())
+				if subKey == "" {
+					subKey = DEFAULT_SUBKEY_STRING
+					needBrkt = true
+				}
+				if nameModFunc != nil {
+					subKey = nameModFunc(subKey)
+				}
+
+				if needBrkt {
+					dest[fmt.Sprintf("%s.[%s]", keyName, subKey)] = mapVal.Interface()
+				} else {
+					dest[fmt.Sprintf("%s.%s", keyName, subKey)] = mapVal.Interface()
+				}
 			}
 		}
 	case reflect.Slice:

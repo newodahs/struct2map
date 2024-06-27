@@ -16,6 +16,9 @@ func ConvertAnyToString(val any) string {
 
 	for {
 		if valOf.Kind() == reflect.Pointer {
+			if reflect.Value(valOf).IsNil() {
+				return ""
+			}
 			valOf = valOf.Elem()
 			continue
 		}
