@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"fmt"
 	"reflect"
 	"strconv"
 )
@@ -12,8 +13,11 @@ const (
 )
 
 func ConvertAnyToString(val any) string {
-	valOf := reflect.ValueOf(val)
+	if val == nil {
+		return ""
+	}
 
+	valOf := reflect.ValueOf(val)
 	for {
 		if valOf.Kind() == reflect.Pointer {
 			if reflect.Value(valOf).IsNil() {
@@ -44,5 +48,5 @@ func ConvertAnyToString(val any) string {
 		return strconv.FormatBool(valOf.Bool())
 	}
 
-	return valOf.String() // we don't support a proper conversion but let's return /something/ and hope for the best...
+	return fmt.Sprintf("%v", val) // we don't support a proper conversion but let's return /something/ and hope for the best...
 }

@@ -34,9 +34,8 @@ Output maps are keyed by either the exported field name directly OR by the use o
 In the case of slices, maps, or other embedded/nested structures, the output maps keys are "namespaced" in the following ways:
  * **Structures**: The embedded/nested structure name will prepend the inner fields as `[parentFieldName].[childFieldName] => value`.
  * **Maps**: Data pulled from maps will appears as `[mapFieldName].[mapKeyToString] => [value]`.
-   * If the map key is a pointer, it is dereferenced until we get to the core value.
-     * A nil pointer will ultimately bubble up as the string constant `DEFAULT_SUBKEY_STRING` wrapped in squre brackets (ex. with no convert options): `[emptyKey]`.
-   * If the map key is otherwise unable to be directly converted to a string, the key will come back as the type name as seen via reflection.
+   * A nil pointer map key will ultimately bubble up as the string constant `DEFAULT_SUBKEY_STRING` wrapped in squre brackets (ex. with no convert options): `[emptyKey]`.
+   * If the map key is otherwise unable to be directly converted to a string, we make a best effort via the `%v` format specifier with `fmt.Sprintf`.
    * In the event the map key is a `float` (of any type) or `complex64`/`complex128`, the conversion function to string uses the '`g`' modifier with a precision of -1 (see notes on https://pkg.go.dev/strconv#FormatFloat and https://pkg.go.dev/strconv#FormatComplex).
    * In all cases, these keys are also subject to the conversion options (above).
  * **Slices**: Data pulled form slices will appear as `[sliceFieldName].[sliceIndex] => [value]`.
