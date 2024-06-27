@@ -23,6 +23,7 @@ type complexTestStruct struct {
 	MapFieldIntKey             map[int]string               `struct2map:"mapFieldIntKey"`
 	MapFieldStrKeyStructVal    map[string]simpleTestStruct  `struct2map:"mapFieldStrKeyStructVal"`
 	MapFieldStrKeyStructPtrVal map[string]*simpleTestStruct `struct2map:"mapFieldStrKeyStructPtrVal"`
+	MapFieldPointerKey         map[*string]string           `struct2map:"mapFieldPointerKey"`
 }
 
 type complexTestStructEmbed struct {
@@ -73,6 +74,8 @@ func Test_RegularCases(t *testing.T) {
 	}
 	testStructPtr := &testStruct
 
+	testStrKey := "testKey"
+
 	testSet := []struct {
 		Name          string
 		TestStructure any
@@ -110,6 +113,7 @@ func Test_RegularCases(t *testing.T) {
 				MapFieldIntKey:             map[int]string{1: "test1", 2: "test2"},
 				MapFieldStrKeyStructVal:    map[string]simpleTestStruct{"simpleStruct1": *testStructPtr},
 				MapFieldStrKeyStructPtrVal: map[string]*simpleTestStruct{"simpleStructPtr1": testStructPtr},
+				MapFieldPointerKey:         map[*string]string{nil: "testing1", &testStrKey: "testing2"},
 			},
 			ExpectedMap: map[string]any{
 				"mapFieldIntKey.1":                                      "test1",
@@ -126,13 +130,15 @@ func Test_RegularCases(t *testing.T) {
 				"mapFieldStrKeyStructVal.regularField":                  1,
 				"mapFieldStrKeyStructVal.regularFieldOmitEmpty":         1,
 				"mapFieldStrKeyStructVal.regularFieldPointerPointer":    1,
-				"sliceField.0":       1,
-				"sliceField.1":       1,
-				"sliceField.2":       1,
-				"sliceFieldPtrVal.0": 1,
-				"sliceFieldPtrVal.1": 1,
-				"sliceFieldPtrVal.2": 1,
-				"topLevelBool":       true,
+				"sliceField.0":                  1,
+				"sliceField.1":                  1,
+				"sliceField.2":                  1,
+				"sliceFieldPtrVal.0":            1,
+				"sliceFieldPtrVal.1":            1,
+				"sliceFieldPtrVal.2":            1,
+				"topLevelBool":                  true,
+				"mapFieldPointerKey.[emptyKey]": "testing1",
+				"mapFieldPointerKey.testKey":    "testing2",
 			},
 		},
 		{
@@ -391,6 +397,8 @@ func Test_MapKeyOptions(t *testing.T) {
 		RegularFieldPointerPointer: &simpleIntPtr,
 	}
 
+	testStrKey := "testKey"
+
 	testStructPtr := &complexTestStructEmbed{
 		ComplexTestStruct: complexTestStruct{
 			TopLevelField:              true,
@@ -401,6 +409,7 @@ func Test_MapKeyOptions(t *testing.T) {
 			MapFieldIntKey:             map[int]string{1: "test1", 2: "test2"},
 			MapFieldStrKeyStructVal:    map[string]simpleTestStruct{"test1": simpleStruct},
 			MapFieldStrKeyStructPtrVal: map[string]*simpleTestStruct{"testPtr1": &simpleStruct},
+			MapFieldPointerKey:         map[*string]string{nil: "testing1", &testStrKey: "testing2"},
 		},
 		AnonStruct: struct {
 			RegStruct    simpleTestStruct
@@ -450,6 +459,8 @@ func Test_MapKeyOptions(t *testing.T) {
 				"complexteststruct.slicefield.2":                                          3,
 				"complexteststruct.slicefieldptrval.0":                                    1,
 				"complexteststruct.toplevelfield":                                         true,
+				"complexteststruct.mapfieldpointerkey.[emptykey]":                         "testing1",
+				"complexteststruct.mapfieldpointerkey.testkey":                            "testing2",
 			},
 		},
 		{
@@ -467,10 +478,10 @@ func Test_MapKeyOptions(t *testing.T) {
 				"ANONSTRUCT.REGSTRUCTPTR.REGULARFIELDPOINTERPOINTER":                      1,
 				"COMPLEXTESTSTRUCT.MAPFIELDINTKEY.1":                                      "test1",
 				"COMPLEXTESTSTRUCT.MAPFIELDINTKEY.2":                                      "test2",
-				"COMPLEXTESTSTRUCT.MAPFIELDSTRKEY.test1":                                  1,
-				"COMPLEXTESTSTRUCT.MAPFIELDSTRKEY.test2":                                  2,
-				"COMPLEXTESTSTRUCT.MAPFIELDSTRKEY.test3":                                  3,
-				"COMPLEXTESTSTRUCT.MAPFIELDSTRKEYPTRVAL.test1":                            1,
+				"COMPLEXTESTSTRUCT.MAPFIELDSTRKEY.TEST1":                                  1,
+				"COMPLEXTESTSTRUCT.MAPFIELDSTRKEY.TEST2":                                  2,
+				"COMPLEXTESTSTRUCT.MAPFIELDSTRKEY.TEST3":                                  3,
+				"COMPLEXTESTSTRUCT.MAPFIELDSTRKEYPTRVAL.TEST1":                            1,
 				"COMPLEXTESTSTRUCT.MAPFIELDSTRKEYSTRUCTPTRVAL.REGULARFIELDNAMETAG":        1,
 				"COMPLEXTESTSTRUCT.MAPFIELDSTRKEYSTRUCTPTRVAL.REGULARFIELDNOTAG":          1,
 				"COMPLEXTESTSTRUCT.MAPFIELDSTRKEYSTRUCTPTRVAL.REGULARFIELDOMITEMPTY":      1,
@@ -484,6 +495,8 @@ func Test_MapKeyOptions(t *testing.T) {
 				"COMPLEXTESTSTRUCT.SLICEFIELD.2":                                          3,
 				"COMPLEXTESTSTRUCT.SLICEFIELDPTRVAL.0":                                    1,
 				"COMPLEXTESTSTRUCT.TOPLEVELFIELD":                                         true,
+				"COMPLEXTESTSTRUCT.MAPFIELDPOINTERKEY.[EMPTYKEY]":                         "testing1",
+				"COMPLEXTESTSTRUCT.MAPFIELDPOINTERKEY.TESTKEY":                            "testing2",
 			},
 		},
 		{
@@ -501,10 +514,10 @@ func Test_MapKeyOptions(t *testing.T) {
 				"AnonStruct.RegStructPtr.RegularFieldPointerPointer":                      1,
 				"ComplexTestStruct.MapFieldIntKey.1":                                      "test1",
 				"ComplexTestStruct.MapFieldIntKey.2":                                      "test2",
-				"ComplexTestStruct.MapFieldStrKey.test1":                                  1,
-				"ComplexTestStruct.MapFieldStrKey.test2":                                  2,
-				"ComplexTestStruct.MapFieldStrKey.test3":                                  3,
-				"ComplexTestStruct.MapFieldStrKeyPtrVal.test1":                            1,
+				"ComplexTestStruct.MapFieldStrKey.Test1":                                  1,
+				"ComplexTestStruct.MapFieldStrKey.Test2":                                  2,
+				"ComplexTestStruct.MapFieldStrKey.Test3":                                  3,
+				"ComplexTestStruct.MapFieldStrKeyPtrVal.Test1":                            1,
 				"ComplexTestStruct.MapFieldStrKeyStructPtrVal.RegularFieldNameTag":        1,
 				"ComplexTestStruct.MapFieldStrKeyStructPtrVal.RegularFieldNoTag":          1,
 				"ComplexTestStruct.MapFieldStrKeyStructPtrVal.RegularFieldOmitEmpty":      1,
@@ -518,6 +531,8 @@ func Test_MapKeyOptions(t *testing.T) {
 				"ComplexTestStruct.SliceField.2":                                          3,
 				"ComplexTestStruct.SliceFieldPtrVal.0":                                    1,
 				"ComplexTestStruct.TopLevelField":                                         true,
+				"ComplexTestStruct.MapFieldPointerKey.[EmptyKey]":                         "testing1",
+				"ComplexTestStruct.MapFieldPointerKey.TestKey":                            "testing2",
 			},
 		},
 		{
@@ -552,6 +567,8 @@ func Test_MapKeyOptions(t *testing.T) {
 				"complexTestStruct.sliceField.2":                                          3,
 				"complexTestStruct.sliceFieldPtrVal.0":                                    1,
 				"complexTestStruct.topLevelField":                                         true,
+				"complexTestStruct.mapFieldPointerKey.[emptyKey]":                         "testing1",
+				"complexTestStruct.mapFieldPointerKey.testKey":                            "testing2",
 			},
 		},
 		{
@@ -569,10 +586,10 @@ func Test_MapKeyOptions(t *testing.T) {
 				"anon_struct.reg_struct_ptr.regular_field_pointer_pointer":                           1,
 				"complex_test_struct.map_field_int_key.1":                                            "test1",
 				"complex_test_struct.map_field_int_key.2":                                            "test2",
-				"complex_test_struct.map_field_str_key.test1":                                        1,
-				"complex_test_struct.map_field_str_key.test2":                                        2,
-				"complex_test_struct.map_field_str_key.test3":                                        3,
-				"complex_test_struct.map_field_str_key_ptr_val.test1":                                1,
+				"complex_test_struct.map_field_str_key.test_1":                                       1,
+				"complex_test_struct.map_field_str_key.test_2":                                       2,
+				"complex_test_struct.map_field_str_key.test_3":                                       3,
+				"complex_test_struct.map_field_str_key_ptr_val.test_1":                               1,
 				"complex_test_struct.map_field_str_key_struct_ptr_val.regular_field_name_tag":        1,
 				"complex_test_struct.map_field_str_key_struct_ptr_val.regular_field_no_tag":          1,
 				"complex_test_struct.map_field_str_key_struct_ptr_val.regular_field_omit_empty":      1,
@@ -586,6 +603,8 @@ func Test_MapKeyOptions(t *testing.T) {
 				"complex_test_struct.slice_field.2":                                                  3,
 				"complex_test_struct.slice_field_ptr_val.0":                                          1,
 				"complex_test_struct.top_level_field":                                                true,
+				"complex_test_struct.map_field_pointer_key.[empty_key]":                              "testing1",
+				"complex_test_struct.map_field_pointer_key.test_key":                                 "testing2",
 			},
 		},
 	}
